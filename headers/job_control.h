@@ -1,14 +1,3 @@
-/*--------------------------------------------------------
-UNIX Shell Project
-function prototypes, macros and type declarations for job_control module
-
-Sistemas Operativos
-Grados I. Informatica, Computadores & Software
-Dept. Arquitectura de Computadores - UMA
-
-Some code adapted from "Fundamentos de Sistemas Operativos", Silberschatz et al.
---------------------------------------------------------*/
-
 #ifndef _JOB_CONTROL_H
 #define _JOB_CONTROL_H
 

@@ -1,19 +1,3 @@
-/**
-UNIX Shell Project
-
-Sistemas Operativos
-Grados I. Informatica, Computadores & Software
-Dept. Arquitectura de Computadores - UMA
-
-Some code adapted from "Fundamentos de Sistemas Operativos", Silberschatz et al.
-
-To compile and run the program:
-   $ gcc Shell_project.c job_control.c -o Shell
-   $ ./Shell          
-	(then type ^D to exit program)
-
-**/
-
 #include <stdbool.h>
 #include <string.h>
 #include "job_control.h"   // remember to compile with module job_control.c
@@ -46,8 +30,6 @@ int treat_child(int i, enum status status_res, job *job);
 void initialization();
 
 void process_internal(char **args, bool *isInternal);
-
-void print_welcome();
 
 job * get_processes();
 

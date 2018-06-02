@@ -1,7 +1,3 @@
-//
-// Created by ubuntie on 2/06/18.
-//
-
 #ifndef SHELL_SHELL_UTILS_H
 #define SHELL_SHELL_UTILS_H
 

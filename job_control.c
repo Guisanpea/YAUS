@@ -1,14 +1,3 @@
-/*--------------------------------------------------------
-UNIX Shell Project
-job_control module
-
-Sistemas Operativos
-Grados I. Informatica, Computadores & Software
-Dept. Arquitectura de Computadores - UMA
-
-Some code adapted from "Fundamentos de Sistemas Operativos", Silberschatz et al.
---------------------------------------------------------*/
-
 #include "headers/job_control.h"
 
 #ifndef __APPLE__

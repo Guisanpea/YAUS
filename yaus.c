@@ -1,6 +1,3 @@
-//
-// Created by ubuntie on 31/05/18.
-//
 #include "shell_project.h"
 #include "job_control.h"
 #include "yaus.h"
@@ -137,7 +134,7 @@ void bg(char ** args){
         if (background_job != NULL) {
             execute_background(background_job);
         } else {
-            printf(ANSI_COLOR_RED"\n Sorry but entry number %d hasn't been found"ANSI_COLOR_RESET, atoi(args[1]));
+            printf(ANSI_COLOR_RED"\nSorry but entry number %d hasn't been found \n"ANSI_COLOR_RESET, atoi(args[1]));
         }
     } else {
         printf(ANSI_COLOR_RED"\nThere is not any job available\n"ANSI_COLOR_RESET);
