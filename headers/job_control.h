@@ -23,8 +23,6 @@ Some code adapted from "Fundamentos de Sistemas Operativos", Silberschatz et al.
 // ----------- ENUMERATIONS ---------------------------------------------
 enum status { SUSPENDED, SIGNALED, EXITED};
 
-
-
 enum job_state { FOREGROUND, BACKGROUND, STOPPED };
 static char* status_strings[] = { "Suspended","Signaled","Exited" };
 static char* state_strings[] = { "Foreground","Background","Stopped" };

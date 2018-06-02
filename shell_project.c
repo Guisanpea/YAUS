@@ -15,11 +15,10 @@ To compile and run the program:
 **/
 
 #include <stdbool.h>
-#include <shell.h>
 #include <string.h>
-#include "headers/job_control.h"   // remember to compile with module job_control.c
-#include "internal_commands.c"
-#include "shell_utils.h"
+#include "job_control.h"   // remember to compile with module job_control.c
+#include "yaus.h"
+#include "shell_project.h"
 
 #define MAX_LINE 256 /* 256 chars per line, per command, should be enough. */
 
@@ -27,10 +26,6 @@ To compile and run the program:
 // -----------------------------------------------------------------------
 //                        GLOBAL VARIABLES
 // -----------------------------------------------------------------------
-
-job *proccesses;
-int shell_terminal;
-struct termios conf;
 
 // -----------------------------------------------------------------------
 //                       FUNCTION DEFINITIONS
@@ -52,12 +47,15 @@ void initialization();
 
 void process_internal(char **args, bool *isInternal);
 
+void print_welcome();
+
+job * get_processes();
+
 // -----------------------------------------------------------------------
 //                       SIGCHLD HANDLER
 // -----------------------------------------------------------------------
 
 
-void print_welcome();
 
 void sigchld_handler(int signum) {
     int i, _status, info, pid_wait, list_length;
@@ -66,9 +64,9 @@ void sigchld_handler(int signum) {
 
     printf(ANSI_COLOR_RESET "SIGCHLD received\n");
 
-    for (i = 1; i <= list_size(proccesses); i++) {
-        job = get_item_bypos(proccesses, i);
-        pid_wait = waitpid(job->pgid, &_status, WUNTRACED | WNOHANG);
+    for (i = 1; i <= list_size(processes); i++) {
+        job = get_item_bypos(processes, i);
+        pid_wait = waitpid(job->pgid, &_status, WUNTRACED || WNOHANG);
 
         if (pid_wait == job->pgid) {
             status_res = analyze_status(_status, &info);
@@ -83,9 +81,9 @@ void sigchld_handler(int signum) {
 
 int treat_child(int i, enum status status_res, job *job) {
     block_SIGCHLD();
-    if ((status_res) == SUSPENDED) edit_job(proccesses, job, STOPPED);
+    if ((status_res) == SUSPENDED) edit_job(processes, job, STOPPED);
     else if ((status_res) == EXITED || (status_res) == SIGNALED) {
-        delete_job(proccesses, job);
+        delete_job(processes, job);
         i--;
     }
     unblock_SIGCHLD();
@@ -125,31 +123,11 @@ int main(void) {
 // -----------------------------------------------------------------------
 
 void initialization() {
-    proccesses = new_list("jobs");
+    processes = new_list("jobs");
 
     shell_terminal = STDIN_FILENO;
     tcgetattr(shell_terminal, &conf);
     signal(SIGCHLD, sigchld_handler);
-}
-
-void print_welcome() {
-    printf(ANSI_COLOR_YELLOW"                        ,.\n");
-    printf("                       /-|\n");
-    printf("                      (--;\n");
-    printf("                     (,-';\n");
-    printf("                   _/_.-';\n");
-    printf("                 _/-.__._<\n");
-    printf("              .-'`-.__   '\\\n");
-    printf("           .'`---=___`===':\n");
-    printf("          /_..---' ___.--.'\n");
-    printf("         |` ___.--' __ .i|\n");
-    printf("         |-' ___.--'_.8:E|\n");
-    printf("         \\,-'  __.-/88::E!\n");
-    printf("          `-.,' _.'|88::E|\n");
-    printf("             `;'../88:: E;\n");
-    printf("              |.'!88::E\\\"/\n");
-    printf("             /.''!\"iiE /\n");
-    printf("             `--'`._.-'   Welcome to YAUS (Yet Another Unix Shell)\n");
 }
 
 void print_prompt() {
@@ -204,11 +182,11 @@ void execute_as_child(char *args[]) {
 void act_as_parent(char **args, int background, int child_pid) {
 
     block_SIGCHLD();
-    add_job(proccesses, new_job(child_pid, args[0], background ? BACKGROUND : FOREGROUND));
+    add_job(processes, new_job(child_pid, args[0], background ? BACKGROUND : FOREGROUND));
     unblock_SIGCHLD();
 
     if (!background) {
-        execute_on_foreground(child_pid, getpid(), proccesses);
+        execute_on_foreground(child_pid, getpid(), processes);
         tcsetattr(shell_terminal, TCSANOW, &conf);
     } else {
         printf("Background job running... pid: %d, command: %s \n", child_pid, args[0]);
