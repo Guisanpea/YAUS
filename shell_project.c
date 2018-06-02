@@ -21,7 +21,7 @@ void execute_as_child(char *args[]);
 
 void act_as_parent(char **args, int background, int child_pid);
 
-bool isChild(int pid_fork);
+bool is_child(int pid_fork);
 
 void print_prompt();
 
@@ -130,7 +130,7 @@ void process_command(int background, char *args[128]) {
             exit(EXIT_FAILURE);
         }
 
-        if (isChild(pid_fork)) {
+        if (is_child(pid_fork)) {
             execute_as_child(args);
         } else {
             act_as_parent(args, background, pid_fork);
@@ -148,13 +148,13 @@ void process_internal(char **args, bool *isInternal) {
     }
 }
 
-bool isChild(int pid_fork) { return pid_fork == 0; }
+bool is_child(int pid_fork) { return pid_fork == 0; }
 
 void execute_as_child(char *args[]) {
     new_process_group(getpid());
     restore_terminal_signals();
 
-    printf(ANSI_COLOR_RESET); //Force defult color
+    printf(ANSI_COLOR_RESET); //Force default color
     execvp(args[0], args);
 
     printf(ANSI_COLOR_RED "Error, command not found: %s \n", args[0]);

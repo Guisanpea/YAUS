@@ -36,8 +36,7 @@ void execute_on_foreground(int child_pid, int parent_pid, job *processes) {
 
     job *new_job = get_item_bypid(processes, child_pid);
 
-    printf("Foreground pid: %d, command: %s, (Status: %s) \n", child_pid, new_job->command,
-           status_strings[process_status]);
+    printf(ANSI_COLOR_CYAN "Foreground pid: %d, command: %s" ANSI_COLOR_RESET "\n", child_pid, new_job->command);
 
     wait_child(child_pid, parent_pid, &status);
 
@@ -53,7 +52,7 @@ void execute_on_foreground(int child_pid, int parent_pid, job *processes) {
 void update_processes(job *processes, const enum status *process_status, job *new_job) {
     block_SIGCHLD();
     edit_job(processes, new_job, STOPPED);
-    printf(ANSI_COLOR_BLUE "Proccess %s stopped (Status: %s)\n" ANSI_COLOR_RESET, new_job->command,
+    printf(ANSI_COLOR_BLUE "Process %s stopped (Status: %s)\n" ANSI_COLOR_RESET, new_job->command,
            state_strings[(*process_status)]);
 
     if ((*process_status) == EXITED || (*process_status) == SIGNALED)
@@ -70,12 +69,12 @@ void wait_child(int child_pid, int parent_pid, int *status) {
 
 
 enum status getStatus(int status) {
-    enum status proccess_status;
+    enum status process_status;
     int info;
 
-    proccess_status = analyze_status(status, &info);
+    process_status = analyze_status(status, &info);
 
-    return proccess_status;
+    return process_status;
 }
 
 void execute_background(job *auxJob) {
