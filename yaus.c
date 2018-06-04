@@ -53,7 +53,7 @@ void update_processes(job *processes, const enum status *process_status, job *ne
     block_SIGCHLD();
     edit_job(processes, new_job, STOPPED);
     printf(ANSI_COLOR_BLUE "Process %s stopped (Status: %s)\n" ANSI_COLOR_RESET, new_job->command,
-           state_strings[(*process_status)]);
+           status_strings[(*process_status)]);
 
     if ((*process_status) == EXITED || (*process_status) == SIGNALED)
         delete_job(processes, new_job);
@@ -124,8 +124,8 @@ void process_job(job *background_job) {
 
 }
 
-void bg(char ** args){
-    job * background_job;
+void bg(char **args) {
+    job *background_job;
     if (!empty_list(processes)) {
         block_SIGCHLD();
         background_job = get_item_bypos(processes, (args[1] != NULL) ? atoi(args[1]) : 1);
